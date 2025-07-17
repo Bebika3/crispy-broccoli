@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>✨ Daily Soulful Motivation ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>🌸 Welcome, Beautiful Soul ✨</h1>
+
+    <!-- Name Input -->
+    <div id="name-form">
+      <p>😊 What's your name, lovely?</p>
+      <input type="text" id="username" placeholder="Enter your name 🌸" />
+      <button onclick="askMood()">✨ Continue</button>
+    </div>
+
+    <!-- Mood Selection -->
+    <div id="mood-form" style="display:none;">
+      <h2 id="greeting"></h2>
+
+      <select id="mood-select">
+        <option value="">-- How is your soul today? --</option>
+        <option value="sad">😢 Sad</option>
+        <option value="tired">😴 Tired</option>
+        <option value="stressed">😣 Stressed</option>
+        <option value="lazy">🛌 Lazy</option>
+        <option value="happy">😊 Happy</option>
+      </select>
+
+      <button onclick="showQuote()">🌿 Show My Quote</button>
+      <p id="quote"></p>
+      <p id="author"></p>
+    </div>
+      <a href="reflect.html" style="display: block; margin-top: 20px; color: #3d1c4d; text-decoration: none; font-weight: bold;">
+          Reflect & Write a Message ✨
+      </a>
+  </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

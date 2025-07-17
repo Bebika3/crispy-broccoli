@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/616/616408.png" type="image/png" />
+  <meta charset="UTF-8" />
+  <title>🌿 Divine Reflections | Soulful Journal 🌿</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+<style>
+  #music-control {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ffb347;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+#theme-toggle {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    background: #704c5e;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  .flower {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3163/3163629.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    animation: floatFlower 1.5s ease-out forwards;
+  }
+
+  @keyframes floatFlower {
+    0% { transform: scale(0.5) translateY(0); opacity: 1; }
+    100% { transform: scale(1.5) translateY(-100px); opacity: 0; }
+  }
+</style>
+  <style>
+    .quote-banner {
+      background: #fff0f6;
+      border-left: 6px solid #d65a9f;
+      padding: 15px;
+      font-style: italic;
+      color: #822a5e;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      animation: fadeIn 2s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .petal {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10%); opacity: 1; }
+      100% { transform: translateY(110vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body style="background: linear-gradient(to right, #ffe6f0, #e6f9ff); font-family: 'Poppins', sans-serif;">
+  <div id="loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#fff9f9;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:'Great Vibes',cursive;font-size:2rem;color:#a64d79;">
+    🌸 Loading Divine Energy...
+  </div>
+  <div class="card">
+    <div id="quote-of-the-day" class="quote-banner">Loading quote of the day... ✨</div>
+    <h1 style="font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: #824c6e;">💖 Welcome to Divine Reflections 💖</h1>
+<p style="font-family: 'Poppins', sans-serif; font-style: italic; color: #5c2b5e; margin-top: -10px;">Let your soul speak. Your words are sacred.</p>
+
+    <p id="soul-question">Loading question...</p>
+    <textarea id="soul-message" placeholder="Write your message here... 🗣️"></textarea>
+    <br />
+    <button onclick="nextQuestion()">🔁 New Question</button>
+    <button onclick="submitMessage()">📩 Send Message</button>
+    <p id="thank-you" style="color: green; margin-top: 10px;"></p>
+
+<h3 style="margin-top: 30px;">📝 Your Reflections</h3>
+<label for='mood-filter' style='font-weight:bold;'>Filter by Mood:</label>
+<select id='mood-filter' onchange='filterMessages()' style='margin-left:10px;'>
+  <option value='all'>All</option>
+</select>
+<ul id="message-list"></ul>
+
+<button onclick="exportMessages()" style="margin-top: 10px; padding: 8px 15px; border: none; border-radius: 8px; background-color: #5c2b5e; color: white; font-weight: bold; cursor: pointer;">⬇️ Export Journal</button>
+
+    <a href="index.html" style="display: block; margin-top: 20px; color: #3d1c4d; text-decoration: none; font-weight: bold;">⬅️ Back to Divine Motivation</a>
+  </div>
+
+  <script>
+    const soulfulQuestions = [
+      "🌙 What made your soul smile today?",       
+      "🧳️ What are you letting go of today?",       
+      "What is something you're grateful for right now?",       
+      "💫 What does peace feel like to you?",       
+      "What dream did you give up?",       
+      "What moment left a mark on yout life?",        
+      "What moment in your life would you want to relieve?",        
+      "What is something you wish you could tell your younger self?",        
+      "Write your children dream and now compare it?",        
+      "If you had more time for your well-being, what would you do?",        
+      "When did You realize it was FOREVER?",               
+      "🌸 Write a message to your future self."
+    ];
+
+    function nextQuestion() {
+      const random = soulfulQuestions[Math.floor(Math.random() * soulfulQuestions.length)];
+      document.getElementById("soul-question").innerText = random;
+      document.getElementById("soul-message").value = "";
+      document.getElementById("thank-you").innerText = "";
+    }
+
+    function submitMessage() {
+  const msg = document.getElementById("soul-message").value.trim();
+  if (msg === "") {
+    alert("Please write a message before sending 💌");
+    return;
+  }
+
+  const mood = prompt("🌈 How are you feeling right now?");
+  const stored = JSON.parse(localStorage.getItem("soulMessages")) || [];
+  stored.push({ text: msg, mood: mood, date: new Date().toLocaleString() });
+      localStorage.setItem("soulMessages", JSON.stringify(stored));
+
+      document.getElementById("thank-you").innerText = "🌷 Thank you for your heartfelt message!";
+      displayMessages();
+      document.getElementById("soul-message").value = "";
+    }
+
+    window.onload = () => {
+  document.getElementById("loader").style.display = "none";
+  greetUser();
+  showQuote();
+  releasePetals();
+  nextQuestion();
+      displayMessages();
+    };
+  function displayMessages() {
+    const list = document.getElementById("message-list");
+    const moodFilter = document.getElementById("mood-filter").value;
+    list.innerHTML = "";
+
+    const stored = JSON.parse(localStorage.getItem("soulMessages")) || [];
+    const moods = new Set();
+
+    stored.forEach((item, index) => {
+      moods.add(item.mood);
+      if (moodFilter === 'all' || item.mood === moodFilter) {
+        const li = document.createElement("li");
+        li.innerHTML = `🪷 <strong>${item.date}</strong> <em>(${item.mood || 'Mood unknown'})</em>: ${item.text} <button onclick="deleteMessage(${index})" style="margin-left: 10px; color:red;">❌</button>`;
+        list.appendChild(li);
+      }
+    });
+
+    const moodSelect = document.getElementById("mood-filter");
+    if (moodSelect.options.length === 1) {
+      moods.forEach(m => {
+        if (m && !Array.from(moodSelect.options).some(opt => opt.value === m)) {
+          const opt = document.createElement('option');
+          opt.value = m;
+          opt.innerText = m;
+          moodSelect.appendChild(opt);
+        }
+      });
+    }
+  };
+  
+
+  function deleteMessage(index) {
+  const stored = JSON.parse(localStorage.getItem("soulMessages")) || [];
+  stored.splice(index, 1);
+  localStorage.setItem("soulMessages", JSON.stringify(stored));
+  displayMessages();
+}
+function exportMessages() {
+  const stored = JSON.parse(localStorage.getItem("soulMessages")) || [];
+  if (stored.length === 0) {
+    alert("No messages to export 💬");
+    return;
+  }
+
+  let content = "📝 Your Reflections Filtered by Mood (optional):";
+  stored.forEach((item, index) => {
+    content += `${index + 1}. [${item.date}]
+Mood: ${item.mood || 'N/A'}
+${item.text}
+
+`;
+  });
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "MySoulJournal.txt";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+function greetUser() {
+  let userName = localStorage.getItem("divineName");
+  if (!userName) {
+    setTimeout(() => {
+      userName = prompt("🌸 May I know your beautiful name?");
+      if (userName) {
+        localStorage.setItem("divineName", userName);
+        location.reload();
+      }
+    }, 100);
+    return;
+  }
+  if (userName && !document.getElementById("welcome-greeting")) {
+    const greeting = document.createElement("p");
+    greeting.id = "welcome-greeting";
+
+    const hour = new Date().getHours();
+    let timeGreeting = "Good Evening";
+    if (hour < 12) timeGreeting = "Good Morning";
+    else if (hour < 18) timeGreeting = "Good Afternoon";
+
+    greeting.innerText = `🌷 ${timeGreeting}, ${userName}! May your soul feel loved and safe here.`;
+    greeting.style.color = "#a64d79";
+    greeting.style.fontWeight = "bold";
+    greeting.style.marginBottom = "20px";
+    greeting.style.textAlign = "center";
+    document.querySelector(".card").insertBefore(greeting, document.getElementById("soul-question"));
+  }
+}
+  
+function showQuote() {
+  const quotes = [
+    "The soul always knows what to do to heal itself. The challenge is to silence the mind.",
+    "Peace begins with a smile. — Mother Teresa",
+    "You are not a drop in the ocean. You are the entire ocean in a drop. — Rumi",
+    "Your sacred space is where you can find yourself again and again.",
+    "Let your heart guide you. It whispers, so listen closely."
+  ];
+  const random = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById("quote-of-the-day").innerText = `✨ ${random}`;
+}
+
+function releasePetals() {
+  for (let i = 0; i < 15; i++) {
+    const petal = document.createElement("div");
+    petal.classList.add("petal");
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.animationDuration = 5 + Math.random() * 5 + "s";
+    document.body.appendChild(petal);
+  }
+}
+document.body.addEventListener("click", function(e) {
+  const flower = document.createElement("div");
+  flower.className = "flower";
+  flower.style.left = `${e.clientX - 15}px`;
+  flower.style.top = `${e.clientY - 15}px`;
+  document.body.appendChild(flower);
+  setTimeout(() => flower.remove(), 1500);
+});
+function filterMessages() {
+  displayMessages();
+}
+</script>
+<audio id="bg-music" loop>
+  <source src="./Audio/nostalgia-a-sweet-amp-memorable-loopable-piano-song-by-gtg-319605.mp3" type="audio/mpeg">
+</audio>
+
+<button id="music-control" onclick="toggleMusic()">🎵 Music: Off</button>
+<button id="theme-toggle" onclick="toggleTheme()">🌓 Theme: Light</button>
+
+<script>
+  let musicPlaying = false;
+  function toggleMusic() {
+    const music = document.getElementById("bg-music");
+    const button = document.getElementById("music-control");
+    if (musicPlaying) {
+      music.pause();
+      button.textContent = "🎵 Music: Off";
+    } else {
+      music.play();
+      button.textContent = "🎶 Music: On";
+    }
+    musicPlaying = !musicPlaying;
+  }
+let currentTheme = 'light';
+function toggleTheme() {
+  const root = document.documentElement;
+  const button = document.getElementById("theme-toggle");
+  if (currentTheme === 'light') {
+    document.body.style.background = '#2e2e2e';
+    document.body.style.color = '#f0e6f6';
+    button.textContent = '🌞 Theme: Dark';
+    currentTheme = 'dark';
+  } else {
+    document.body.style.background = 'linear-gradient(to right, #ffdde1, #ee9ca7)';
+    document.body.style.color = '';
+    button.textContent = '🌓 Theme: Light';
+    currentTheme = 'light';
+  }
+}
+</script>
+</body>
+</html>
